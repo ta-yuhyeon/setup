@@ -1,0 +1,10 @@
+homebrew_installation_command: "/bin/bash -c '$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)'"
+
+homebrew_packages:
+  - mas
+  - chrome
+  - discord
+  - visual-studio-code
+  - vmware-fusion
+
+mas_package: "DaVinci Resolve"

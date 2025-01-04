@@ -17,3 +17,35 @@
           ansible.builtin.command: "xcode-select --install"
           register: xcode_commands
           changed_when: xcode_commands != 0
+
+        - name: Detect if brew is installed
+          ansible.builtin.command: "brew --version"
+          register: homebrew
+          changed_when: homebrew != 0
+
+        - name: Install homebrew if not presents
+          when: homebrew | length == 0
+          ansible.builtin.command: "{{ homebrew_installation_command }}"
+          register: homebrew_commands
+          changed_when: homebrew_commands != 0
+
+        - name: Detect if mas is installed
+          ansible.builtin.command: "mas version"
+          register: mas
+          changed_when: mas != 0
+
+        # - name: Detect code via mas
+        #   when: mas | length == 0
+        #   ansible.builtin.command: "{{ mas_installation_command }}"
+        #   register: mas_commands
+        #   changed_when: mas_commands != 0
+
+        # - name: Detect id packages via mas
+        #   ansible.builtin.command: "mas install $(mas search '{{ mas_package }}' | head -n 1 | awk '{print $1}')"
+        #   register: mas_packages_2_install
+        #   changed_when: mas_packages_2_install != 0
+        - name: Install programs via mas
+          community.general.mas:
+            id:
+              - 571213070
+            state: present
