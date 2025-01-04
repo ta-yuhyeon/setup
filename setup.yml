@@ -1,0 +1,19 @@
+---
+- name: OMNI SETUP INITIALIZATION
+  hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Setup for MacOSX with apple silicon chip
+      when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
+      block:
+
+        - name: Detect if xcode commands are installed
+          ansible.builtin.command: "xcode-select --version"
+          register: xcode
+          changed_when: xcode != 0
+
+        - name: Install xcode commands if not presents
+          when: xcode | length == 0
+          ansible.builtin.command: "xcode-select --install"
+          register: xcode_commands
+          changed_when: xcode_commands != 0
