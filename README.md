@@ -8,6 +8,11 @@ omni setup is a repository used to install my own setup for every kind of OS in 
 xcode-select --install
 ```
 
+##### install homebrew commands
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
 ##### pip commands
 ```bash
 pip install --upgrade pip

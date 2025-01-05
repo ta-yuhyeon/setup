@@ -2,48 +2,36 @@
 - name: OMNI SETUP INITIALIZATION
   hosts: localhost
   gather_facts: true
+  vars_files:
+    - vars.yml
   tasks:
     - name: Setup for MacOSX with apple silicon chip
       when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
       block:
+        - name: Detect mac essentials dev tools
+          block:
+            - name: Detect if xcode commands are installed
+              ansible.builtin.command: "xcode-select --version"
+              register: xcode
+              changed_when: xcode != 0
 
-        - name: Detect if xcode commands are installed
-          ansible.builtin.command: "xcode-select --version"
-          register: xcode
-          changed_when: xcode != 0
-
-        - name: Install xcode commands if not presents
-          when: xcode | length == 0
-          ansible.builtin.command: "xcode-select --install"
-          register: xcode_commands
-          changed_when: xcode_commands != 0
-
-        - name: Detect if brew is installed
-          ansible.builtin.command: "brew --version"
-          register: homebrew
-          changed_when: homebrew != 0
-
-        - name: Install homebrew if not presents
-          when: homebrew | length == 0
-          ansible.builtin.command: "{{ homebrew_installation_command }}"
-          register: homebrew_commands
-          changed_when: homebrew_commands != 0
+            - name: Detect if brew is installed
+              ansible.builtin.command: "brew --version"
+              register: homebrew
+              changed_when: homebrew != 0
+              ignore_errors: true
 
         - name: Detect if mas is installed
           ansible.builtin.command: "mas version"
           register: mas
           changed_when: mas != 0
+          ignore_errors: true
 
-        # - name: Detect code via mas
-        #   when: mas | length == 0
-        #   ansible.builtin.command: "{{ mas_installation_command }}"
-        #   register: mas_commands
-        #   changed_when: mas_commands != 0
-
-        # - name: Detect id packages via mas
-        #   ansible.builtin.command: "mas install $(mas search '{{ mas_package }}' | head -n 1 | awk '{print $1}')"
-        #   register: mas_packages_2_install
-        #   changed_when: mas_packages_2_install != 0
+        - name: Install packages via BREW
+          community.general.homebrew:
+            name: "{{ item }}"
+            state: absent
+          loop: "{{ homebrew_packages }}"
 
         - name: Install programs via mas
           community.general.mas:
@@ -51,14 +39,8 @@
               - 571213070 # installation of davinci Resolve
             state: present
 
-        - name: Install packages via BREW
-          when: false
-          community.general.homebrew:
-            name: "{{ item }}"
-            state: present
-          loop: "{{ homebrew_packages }}"
-
         - name: Set dock settings for MacOSX
+          become: true
           block:
             - name: Detect if show-apps-in-docs is enabled
               ansible.builtin.command: "defaults read com.apple.dock show-apps-in-dock"
