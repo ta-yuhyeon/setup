@@ -44,6 +44,7 @@
         #   ansible.builtin.command: "mas install $(mas search '{{ mas_package }}' | head -n 1 | awk '{print $1}')"
         #   register: mas_packages_2_install
         #   changed_when: mas_packages_2_install != 0
+
         - name: Install programs via mas
           community.general.mas:
             id:
@@ -51,7 +52,30 @@
             state: present
 
         - name: Install packages via BREW
+          when: false
           community.general.homebrew:
             name: "{{ item }}"
             state: present
           loop: "{{ homebrew_packages }}"
+
+        - name: Set dock settings for MacOSX
+          block:
+            - name: Detect if show-apps-in-docs is enabled
+              ansible.builtin.command: "defaults read com.apple.dock show-apps-in-dock"
+              register: is_show_apps_in_dock
+              changed_when: is_show_apps_in_dock != 1
+
+            - name: Set show-apps-in-dock as false
+              when: is_show_apps_in_dock != 0
+              ansible.builtin.command: "defaults write com.apple.dock show-apps-in-dock -bool False"
+              changed_when: is_show_apps_in_dock == 1
+
+            - name: Detect if show-recents is enabled
+              ansible.builtin.command: "defaults read com.apple.dock show-recents"
+              register: is_show_recents
+              changed_when: is_show_recents != 1
+
+            - name: Set show-apps-in-dock as false
+              when: is_show_recents != 0
+              ansible.builtin.command: "defaults write com.apple.dock show-recents -bool False"
+              changed_when: is_show_recents == 1
