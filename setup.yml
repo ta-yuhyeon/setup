@@ -47,5 +47,11 @@
         - name: Install programs via mas
           community.general.mas:
             id:
-              - 571213070
+              - 571213070 # installation of davinci Resolve
             state: present
+
+        - name: Install packages via BREW
+          community.general.homebrew:
+            name: "{{ item }}"
+            state: present
+          loop: "{{ homebrew_packages }}"

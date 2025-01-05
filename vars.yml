@@ -2,7 +2,7 @@ homebrew_installation_command: "/bin/bash -c '$(curl -fsSL https://raw.githubuse
 
 homebrew_packages:
   - mas
-  - chrome
+  - google-chrome
   - discord
   - visual-studio-code
   - vmware-fusion
