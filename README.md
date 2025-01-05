@@ -3,6 +3,11 @@
 omni setup is a repository used to install my own setup for every kind of OS in its core it uses ansible and python virtual environment to maintain a pure environment.
 
 ## commands
+##### xcode commands
+```bash
+xcode-select --install
+```
+
 ##### pip commands
 ```bash
 pip install --upgrade pip
