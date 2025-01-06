@@ -1,0 +1,34 @@
+---
+- name: Ansible pull setup
+  hosts: localhost
+  tasks:
+    - name: Init my personal setup
+      block:
+        - name: Install dependencies
+          ansible.builtin.apt:
+            name:
+              - zsh
+              - vim
+              - git
+            state: present
+          when: ansible_distribution != 'MacOSX'
+
+        - name: Copy zshrc file
+          ansible.builtin.copy:
+            src: ./files/zshrc
+            dest: "~/.zshrc"
+            mode: "0644"
+            force: true
+
+        - name: Copy vimrc file
+          ansible.builtin.copy:
+            src: ./files/vimrc
+            dest: "~/.vimrc"
+            mode: "0644"
+            force: true
+
+        - name: Render gitconfig file
+          ansible.builtin.template:
+            src: gitconfig.j2
+            dest: ~/.gitconfig
+            mode: '0644'
