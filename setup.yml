@@ -8,56 +8,37 @@
     - name: Setup for MacOSX with apple silicon chip
       when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
       block:
-        - name: Install packages via BREW
-          community.general.homebrew:
-            name: "{{ item }}"
-            state: present
-          loop: "{{ homebrew_packages }}"
-
-        - name: Install programs via mas
-          community.general.mas:
-            id: 571213070 # installation of davinci Resolve
-            state: absent
-          become: true
-
         - name: Set settings for MacOSX
           become: true
           become_method: ansible.builtin.sudo
           block:
-            - name: Detect show-apps-in-dock # noqa no-changed-when
-              ansible.builtin.command: "defaults read com.apple.dock show-apps-in-dock"
-              register: show_apps_in_dock
-              changed_when: false
+            - name: Install homebrew
+              ansible.builtin.import_role:
+                name: geerlingguy.mac.homebrew
+                tasks_from: main.yml
 
-            - name: Detect show-recents # noqa no-changed-when
-              ansible.builtin.command: "defaults read com.apple.dock show-recents"
-              register: show_recents
-              changed_when: false
+        - name: Set development settings
+          become: true
+          become_method: ansible.builtin.sudo
+          block:
+            - name: Copy zshrc file
+              ansible.builtin.copy:
+                src: ./files/.zshrc
+                dest: "~/.zshrc"
+                mode: "0644"
+                force: true
+                # remote_src: false
 
-            - name: Detect autohide # noqa no-changed-when
-              ansible.builtin.command: "defaults read com.apple.dock 'autohide'"
-              register: show_autohide
-              changed_when: false
+            - name: Copy vimrc file
+              ansible.builtin.copy:
+                src: ./files/.vimrc
+                dest: "~/.vimrc"
+                mode: "0644"
+                force: true
+                # remote_src: false
 
-            - name: Set show-apps-in-dock as false
-              changed_when: show_apps_in_dock.rc == "1"
-              ansible.builtin.command: "defaults write com.apple.dock show-apps-in-dock -int 0"
-
-            - name: Set show-recents as false
-              changed_when: show_recents.rc == "1"
-              ansible.builtin.command: "defaults write com.apple.dock show-recents -int 0"
-
-            - name: Set autohide as false
-              changed_when: show_recents.rc == "1"
-              ansible.builtin.command: "defaults write com.apple.dock 'autohide' -int 0"
-
-            - name: Check if hostname is already Setup
-              changed_when: false
-              ansible.builtin.command: "scutil --get HostName"
-              register: get_hostname
-
-            - name: Set Hostname
-              register: current_hostname
-              changed_when: get_hostname.stdout != desired_hostname
-              when: get_hostname.stdout != desired_hostname
-              ansible.builtin.command: "scutil --set HostName {{ desired_hostname }}"
+            - name: Render gitconfig file
+              ansible.builtin.template:
+                src: gitconfig.j2
+                dest: ~/.gitconfig
+                mode: '0644'
