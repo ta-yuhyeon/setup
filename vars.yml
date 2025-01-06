@@ -3,5 +3,10 @@ homebrew_packages:
   - google-chrome
   - discord
   - visual-studio-code
+  - vmware-fusion
 
-mas_package: "DaVinci Resolve"
+mas_packages: 
+  - name: "DaVinci Resolve"
+    code: 571213070
+
+desired_hostname: "N3M0"

@@ -8,56 +8,56 @@
     - name: Setup for MacOSX with apple silicon chip
       when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
       block:
-        - name: Detect mac essentials dev tools
-          block:
-            - name: Detect if xcode commands are installed
-              ansible.builtin.command: "xcode-select --version"
-              register: xcode
-              changed_when: xcode != 0
-
-            - name: Detect if brew is installed
-              ansible.builtin.command: "brew --version"
-              register: homebrew
-              changed_when: homebrew != 0
-              ignore_errors: true
-
-        - name: Detect if mas is installed
-          ansible.builtin.command: "mas version"
-          register: mas
-          changed_when: mas != 0
-          ignore_errors: true
-
         - name: Install packages via BREW
           community.general.homebrew:
             name: "{{ item }}"
-            state: absent
+            state: present
           loop: "{{ homebrew_packages }}"
 
         - name: Install programs via mas
           community.general.mas:
-            id:
-              - 571213070 # installation of davinci Resolve
-            state: present
-
-        - name: Set dock settings for MacOSX
+            id: 571213070 # installation of davinci Resolve
+            state: absent
           become: true
+
+        - name: Set settings for MacOSX
+          become: true
+          become_method: ansible.builtin.sudo
           block:
-            - name: Detect if show-apps-in-docs is enabled
+            - name: Detect show-apps-in-dock # noqa no-changed-when
               ansible.builtin.command: "defaults read com.apple.dock show-apps-in-dock"
-              register: is_show_apps_in_dock
-              changed_when: is_show_apps_in_dock != 1
+              register: show_apps_in_dock
+              changed_when: false
 
-            - name: Set show-apps-in-dock as false
-              when: is_show_apps_in_dock != 0
-              ansible.builtin.command: "defaults write com.apple.dock show-apps-in-dock -bool False"
-              changed_when: is_show_apps_in_dock == 1
-
-            - name: Detect if show-recents is enabled
+            - name: Detect show-recents # noqa no-changed-when
               ansible.builtin.command: "defaults read com.apple.dock show-recents"
-              register: is_show_recents
-              changed_when: is_show_recents != 1
+              register: show_recents
+              changed_when: false
+
+            - name: Detect autohide # noqa no-changed-when
+              ansible.builtin.command: "defaults read com.apple.dock 'autohide'"
+              register: show_autohide
+              changed_when: false
 
             - name: Set show-apps-in-dock as false
-              when: is_show_recents != 0
-              ansible.builtin.command: "defaults write com.apple.dock show-recents -bool False"
-              changed_when: is_show_recents == 1
+              changed_when: show_apps_in_dock.rc == "1"
+              ansible.builtin.command: "defaults write com.apple.dock show-apps-in-dock -int 0"
+
+            - name: Set show-recents as false
+              changed_when: show_recents.rc == "1"
+              ansible.builtin.command: "defaults write com.apple.dock show-recents -int 0"
+
+            - name: Set autohide as false
+              changed_when: show_recents.rc == "1"
+              ansible.builtin.command: "defaults write com.apple.dock 'autohide' -int 0"
+
+            - name: Check if hostname is already Setup
+              changed_when: false
+              ansible.builtin.command: "scutil --get HostName"
+              register: get_hostname
+
+            - name: Set Hostname
+              register: current_hostname
+              changed_when: get_hostname.stdout != desired_hostname
+              when: get_hostname.stdout != desired_hostname
+              ansible.builtin.command: "scutil --set HostName {{ desired_hostname }}"
