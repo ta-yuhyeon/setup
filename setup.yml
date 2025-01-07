@@ -11,6 +11,7 @@
 
     - name: git_email
       prompt: What is your email?
+      private: false
   tasks:
     - name: Setup for MacOSX with apple silicon chip
       when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
@@ -53,11 +54,14 @@
                 tasks_from: main.yml
 
             - name: Check if hostname is already Setup
+              ignore_errors: true
               changed_when: false
               ansible.builtin.command: "scutil --get HostName"
               register: get_hostname
 
             - name: Set Hostname
+              become: true
+              become_method: ansible.builtin.sudo
               register: current_hostname
               changed_when: get_hostname.stdout != desired_hostname
               when: get_hostname.stdout != desired_hostname
