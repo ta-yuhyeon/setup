@@ -7,10 +7,9 @@
 ```bash
 xcode-select --install
 ```
-
-##### install homebrew commands
+##### path commands
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+export PATH=$PATH:/Users/$(whoami)/Library/Python/3.9/bin
 ```
 
 ##### pip commands
@@ -36,5 +35,5 @@ deactivate
 ##### ansible commands
 ```bash
 ansible-galaxy install -r ./requirements/requirements.yml
-ansible-playbook setup.yml --ask-become-pass --extra-vars="git_email="
+ansible-playbook setup.yml --ask-become-pass
 ```

@@ -8,8 +8,6 @@ homebrew_packages:
 mas_installed_apps:
   - { id: 571213070, name: "DaVinci Resolve" }
 
-desired_hostname: "N3M0"
-
 homebrew_installed_packages:
   - nmap
   - ssh-copy-id
@@ -21,6 +19,8 @@ homebrew_taps: []
 
 homebrew_cask_appdir: /Applications
 homebrew_cask_apps:
+  - logi-options+
+  - visual-studio-code
   - obsidian
   - google-chrome
   - discord

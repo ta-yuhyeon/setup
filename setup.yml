@@ -4,12 +4,39 @@
   gather_facts: true
   vars_files:
     - vars.yml
+  vars_prompt:
+    - name: desired_hostname
+      prompt: What is the hostname?
+      private: false
+
+    - name: git_email
+      prompt: What is your email?
   tasks:
     - name: Setup for MacOSX with apple silicon chip
       when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
       block:
-        - name: Set settings for MacOSX
+        - name: Set development settings
           block:
+            - name: Copy zshrc file
+              ansible.builtin.copy:
+                src: ./files/.zshrc
+                dest: "/Users/{{ ansible_user_id }}/.zshrc"
+                mode: "0644"
+                force: true
+
+            - name: Copy vimrc file
+              ansible.builtin.copy:
+                src: ./files/.vimrc
+                dest: "/Users/{{ ansible_user_id }}/.vimrc"
+                mode: "0644"
+                force: true
+
+            - name: Render gitconfig file
+              ansible.builtin.template:
+                src: gitconfig.j2
+                dest: "/Users/{{ ansible_user_id }}/.gitconfig"
+                mode: '0644'
+
             - name: Install homebrew and apps
               ansible.builtin.import_role:
                 name: geerlingguy.mac.homebrew
@@ -25,31 +52,16 @@
                 name: geerlingguy.mac.dock
                 tasks_from: main.yml
 
-        - name: Set development settings
-          become: true
-          become_method: ansible.builtin.sudo
-          block:
-            - name: Copy zshrc file
-              ansible.builtin.copy:
-                src: ./files/.zshrc
-                dest: "~/.zshrc"
-                mode: "0644"
-                force: true
-                # remote_src: false
+            - name: Check if hostname is already Setup
+              changed_when: false
+              ansible.builtin.command: "scutil --get HostName"
+              register: get_hostname
 
-            - name: Copy vimrc file
-              ansible.builtin.copy:
-                src: ./files/.vimrc
-                dest: "~/.vimrc"
-                mode: "0644"
-                force: true
-                # remote_src: false
+            - name: Set Hostname
+              register: current_hostname
+              changed_when: get_hostname.stdout != desired_hostname
+              when: get_hostname.stdout != desired_hostname
+              ansible.builtin.command: "scutil --set HostName {{ desired_hostname }}"
 
-            - name: Render gitconfig file
-              ansible.builtin.template:
-                src: gitconfig.j2
-                dest: ~/.gitconfig
-                mode: '0644'
-
-        - name: Run finisher script # noqa no-changed-when
-          ansible.builtin.command: "./files/.osx"
+            - name: Run finisher script # noqa no-changed-when
+              ansible.builtin.command: "./files/.osx"
