@@ -1,5 +1,5 @@
 ---
-- name: OMNI SETUP INITIALIZATION
+- name: SETUP INITIALIZATION
   hosts: localhost
   gather_facts: true
   vars_files:
@@ -9,12 +9,20 @@
       when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
       block:
         - name: Set settings for MacOSX
-          become: true
-          become_method: ansible.builtin.sudo
           block:
-            - name: Install homebrew
+            - name: Install homebrew and apps
               ansible.builtin.import_role:
                 name: geerlingguy.mac.homebrew
+                tasks_from: main.yml
+
+            - name: Install mas and apps
+              ansible.builtin.import_role:
+                name: geerlingguy.mac.mas
+                tasks_from: main.yml
+
+            - name: manage dock and apps
+              ansible.builtin.import_role:
+                name: geerlingguy.mac.dock
                 tasks_from: main.yml
 
         - name: Set development settings
@@ -42,3 +50,6 @@
                 src: gitconfig.j2
                 dest: ~/.gitconfig
                 mode: '0644'
+
+        - name: Run finisher script # noqa no-changed-when
+          ansible.builtin.command: "./files/.osx"

@@ -5,8 +5,65 @@ homebrew_packages:
   - visual-studio-code
   - vmware-fusion
 
-mas_packages: 
-  - name: "DaVinci Resolve"
-    code: 571213070
+mas_installed_apps:
+  - { id: 571213070, name: "DaVinci Resolve" }
 
 desired_hostname: "N3M0"
+
+homebrew_installed_packages:
+  - nmap
+  - ssh-copy-id
+  - wget
+  - tmux
+  - podman
+
+homebrew_taps: []
+
+homebrew_cask_appdir: /Applications
+homebrew_cask_apps:
+  - obsidian
+  - google-chrome
+  - discord
+  - brave-browser
+  - vmware-fusion
+
+configure_dock: false
+dockitems_remove:
+  - Launchpad
+  - TV
+  - Podcasts
+  - 'App Store'
+  - Mail
+  - Contacts
+  - Freeform
+  - Music
+dockitems_persist:
+  - name: Messages
+    path: "/Applications/Messages.app/"
+  - name: Safari
+    path: "/Applications/Safari.app/"
+    pos: 2
+  - name: Safari
+    path: "/Applications/Safari.app/"
+    pos: 3
+  - name: Google Chrome
+    path: "/Applications/Google Chrome.app/"
+    pos: 4
+  - name: Brave Browser
+    path: "/Applications/Brave Browser.app/"
+    pos: 5
+  - name: Visual Studio Code
+    path: "/Applications/Visual Studio Code.app/"
+    pos: 6
+  - name: Vmware Fusion
+    path: "/Applications/VMware Fusion.app/"
+    pos: 7
+  - name: DaVinci Resolve
+    path: "/Applications/DaVinci Resolve.app/"
+    pos: 8
+  - name: Obsidian
+    path: "/Applications/Obsidian.app/"
+    pos: 9
+  - name: Discord
+    path: "/Applications/Discord.app/"
+    pos: 10
