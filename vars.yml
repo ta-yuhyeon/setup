@@ -1,3 +1,9 @@
+home_path: "~"
+dotfile_path: "{{ playbook_dir }}/files"
+dotfile_list:
+  - .vimrc
+  - .zshrc
+
 homebrew_packages:
   - mas
   - google-chrome
