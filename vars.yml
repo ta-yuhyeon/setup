@@ -10,6 +10,7 @@ homebrew_packages:
   - discord
   - visual-studio-code
   - vmware-fusion
+  - raspberry-pi-imager
 
 mas_installed_apps:
   - { id: 571213070, name: "DaVinci Resolve" }
