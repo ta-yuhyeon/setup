@@ -73,3 +73,6 @@ dockitems_persist:
   - name: Discord
     path: "/Applications/Discord.app/"
     pos: 10
+  - name: Raspberry Pi Imager
+    path: "/Applications/Raspberry Pi Imager.app"
+    pos: 11
