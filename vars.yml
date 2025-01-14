@@ -9,7 +9,6 @@ homebrew_packages:
   - google-chrome
   - discord
   - visual-studio-code
-  - vmware-fusion
 
 mas_installed_apps:
   - { id: 571213070, name: "DaVinci Resolve" }
