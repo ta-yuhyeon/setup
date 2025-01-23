@@ -19,7 +19,7 @@ homebrew_installed_packages:
   - wget
   - tmux
   - podman
-  - hashicorp/tap/hashicorp-vagrant
+  - vagrant-vmware-utility
 
 homebrew_taps:
   - hashicorp/tap
