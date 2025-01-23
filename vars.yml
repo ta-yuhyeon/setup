@@ -19,8 +19,10 @@ homebrew_installed_packages:
   - wget
   - tmux
   - podman
+  - hashicorp/tap/hashicorp-vagrant
 
-homebrew_taps: []
+homebrew_taps:
+  - hashicorp/tap
 
 homebrew_cask_appdir: /Applications
 homebrew_cask_apps:
