@@ -1,34 +1,62 @@
 ---
-- name: Ansible pull setup
+- name: SETUP INITIALIZATION
   hosts: localhost
+  gather_facts: true
+  vars_files:
+    - vars.yml
+  vars_prompt:
+    - name: desired_hostname
+      prompt: What is the hostname?
+      private: false
+
+    - name: git_email
+      prompt: What is your email?
+      private: false
+  
   tasks:
-    - name: Init my personal setup
+    - name: Setup for MacOSX with apple silicon chip
+      when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
       block:
-        - name: Install dependencies
-          ansible.builtin.apt:
-            name:
-              - zsh
-              - vim
-              - git
-            state: present
-          when: ansible_distribution != 'MacOSX'
+        - name: Set development settings
+          block:
+            - name: Link dotfiles into home folder.
+              ansible.builtin.file:
+                src: "{{ dotfile_path }}/{{ item }}"
+                dest: "{{ home_path }}/{{ item }}"
+                state: link
+                mode: 0644
+              become: false
+              loop: "{{ dotfile_list }}"
 
-        - name: Copy zshrc file
-          ansible.builtin.copy:
-            src: ./files/zshrc
-            dest: "~/.zshrc"
-            mode: "0644"
-            force: true
+            - name: Install homebrew and apps
+              ansible.builtin.import_role:
+                name: geerlingguy.mac.homebrew
+                tasks_from: main.yml
 
-        - name: Copy vimrc file
-          ansible.builtin.copy:
-            src: ./files/vimrc
-            dest: "~/.vimrc"
-            mode: "0644"
-            force: true
+            - name: Install mas and apps
+              ansible.builtin.import_role:
+                name: geerlingguy.mac.mas
+                tasks_from: main.yml
 
-        - name: Render gitconfig file
-          ansible.builtin.template:
-            src: gitconfig.j2
-            dest: ~/.gitconfig
-            mode: '0644'
+            - name: manage dock and apps
+              ansible.builtin.import_role:
+                name: geerlingguy.mac.dock
+                tasks_from: main.yml
+
+            - name: Check if hostname is already Setup
+              ignore_errors: true
+              changed_when: false
+              ansible.builtin.command: "scutil --get HostName"
+              register: get_hostname
+
+            - name: Set Hostname
+              become: true
+              become_method: ansible.builtin.sudo
+              register: current_hostname
+              changed_when: get_hostname.stdout != desired_hostname
+              when: get_hostname.stdout != desired_hostname
+              ansible.builtin.command: "scutil --set HostName {{ desired_hostname }}"
+
+            - name: Run finisher script
+              changed_when: false
+              ansible.builtin.command: "./files/.osx"
