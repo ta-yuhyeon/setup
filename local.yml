@@ -19,14 +19,14 @@
       block:
         - name: Set development settings
           block:
-            # - name: Link dotfiles into home folder.
-            #   ansible.builtin.file:
-            #     src: "{{ dotfile_path }}/{{ item }}"
-            #     dest: "{{ home_path }}/{{ item }}"
-            #     state: link
-            #     mode: 0644
-            #   become: false
-            #   loop: "{{ dotfile_list }}"
+            - name: Link dotfiles into home folder.
+              ansible.builtin.file:
+                src: "{{ dotfile_path }}/{{ item }}"
+                dest: "{{ home_path }}/{{ item }}"
+                state: link
+                mode: 0644
+              become: false
+              loop: "{{ dotfile_list }}"
 
             - name: Install homebrew and apps
               ansible.builtin.import_role:
