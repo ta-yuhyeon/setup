@@ -30,5 +30,5 @@ then
     echo -e $ANSIBLE_COMMAND_BANNER
     # ansible-pull -U $GITHUB_SETUP_URL -C devel --ask-become-pass -v
     mkdir $HOME/$GITHUB_FOLDER_PATH
-    git clone $GITHUB_SETUP_URL $GITHUB_FOLDER_PATH
+    git clone $GITHUB_SETUP_URL $HOME/$GITHUB_FOLDER_PATH
 fi
