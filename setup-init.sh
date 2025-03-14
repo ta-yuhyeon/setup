@@ -13,5 +13,5 @@ then
     export PATH="$PATH:/opt/homebrew/bin:/Users/$(whoami)/Library/Python/3.9/bin"
     curl -s "${RAW_GITHUB_SETUP_URL}${ANSIBLE_REQUIREMENTS_PATH}" -o /tmp/requirements.yml
     ansible-galaxy install -r /tmp/requirements.yml; rm /tmp/requirements.yml
-    ansible-pull -U $GITHUB_SETUP_URL -C devel --ask-become-pass
+    # ansible-pull -U $GITHUB_SETUP_URL -C devel --ask-become-pass -v
 fi
