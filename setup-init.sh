@@ -8,7 +8,7 @@ RAW_GITHUB_SETUP_URL="https://raw.githubusercontent.com/ta-yuhyeon/setup/refs/he
 PY_REQUIREMENTS_PATH="/requirements/requirements.txt"
 ANSIBLE_REQUIREMENTS_PATH="/requirements/requirements.yml"
 ANSIBLE_PLAYBOOK_PATH="/setup.yml"
-GITHUB_FOLDER_PATH="~/github/"
+GITHUB_FOLDER_PATH="github"
 SPACER=$(echo -e "\n")
 
 if [[ -f /usr/bin/sw_vers ]];
@@ -29,6 +29,6 @@ then
 
     echo -e $ANSIBLE_COMMAND_BANNER
     # ansible-pull -U $GITHUB_SETUP_URL -C devel --ask-become-pass -v
-    mkdir $GITHUB_FOLDER_PATH
+    mkdir $HOME/$GITHUB_FOLDER_PATH
     git clone $GITHUB_SETUP_URL $GITHUB_FOLDER_PATH
 fi
