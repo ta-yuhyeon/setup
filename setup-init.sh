@@ -29,7 +29,7 @@ then
 
     echo -e $ANSIBLE_COMMAND_BANNER
     # ansible-pull -U $GITHUB_SETUP_URL -C devel --ask-become-pass -v
-    if [[ -d $HOME/$GITHUB_FOLDER_PATH]];
+    if [[ -d $HOME/$GITHUB_FOLDER_PATH ]];
     then
         echo -e "DIRECTORY AND REPO ALREADY CLONED"
         exit 1
