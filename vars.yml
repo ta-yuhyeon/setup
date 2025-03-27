@@ -3,6 +3,7 @@ dotfile_path: "{{ playbook_dir }}/files"
 dotfile_list:
   - .vimrc
   - .zshrc
+  - .tmux.conf
 
 homebrew_packages:
   - mas
