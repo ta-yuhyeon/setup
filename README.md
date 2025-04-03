@@ -8,8 +8,13 @@
 xcode-select --install
 ```
 ##### path commands
+for UNIX
 ```bash
 export PATH=$PATH:/Users/$(whoami)/Library/Python/3.9/bin
+```
+for LINUX
+```bash
+export PATH=$PATH:/home/$(whoami)/Library/Python/3.9/binexport PATH=$PATH:/home/$(whoami)/Library/Python/3.9/bin
 ```
 
 ##### pip commands

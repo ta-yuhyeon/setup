@@ -4,16 +4,33 @@
   gather_facts: true
   vars_files:
     - vars.yml
-  vars_prompt:
-    - name: desired_hostname
-      prompt: What is the hostname?
-      private: false
-
-    - name: git_email
-      prompt: What is your email?
-      private: false
+#  vars_prompt:
+#    - name: desired_hostname
+#      prompt: What is the hostname?
+#      private: false
+#
+#    - name: git_email
+#      prompt: What is your email?
+#      private: false
   
   tasks:
+    - name: Setup for Linux Based Workstations with x86_64 processor
+      when: ansible_system == "Linux" and ansible_architecture == "x86_64"
+      block:
+        - name: Set development settings
+          tags:
+            - no_gui
+          block:
+            - name: Link dotfiles into home folder.
+              ansible.builtin.file:
+                src: "{{ dotfile_path }}/{{ item }}"
+                dest: "{{ home_path }}/{{ item }}"
+                state: link
+                mode: 0644
+                force: true
+              become: false
+              loop: "{{ dotfile_list }}"
+
     - name: Setup for MacOSX with apple silicon chip
       when: ansible_distribution == "MacOSX" and ansible_architecture == "arm64"
       block:
@@ -60,3 +77,4 @@
             - name: Run finisher script
               changed_when: false
               ansible.builtin.command: "./files/.osx"
+    
