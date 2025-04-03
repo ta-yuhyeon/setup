@@ -27,7 +27,6 @@
                 dest: "{{ home_path }}/{{ item }}"
                 state: link
                 mode: 0644
-                force: true
               become: false
               loop: "{{ dotfile_list }}"
 
