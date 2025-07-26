@@ -43,6 +43,12 @@
                 name: geerlingguy.mac.dock
                 tasks_from: main.yml
 
+            - name: Customization for vagrant
+              ansible.builtin.command: vagrant plugin install vagrant-vmware-desktop
+              args:
+                creates: ~/.vagrant.d/plugins.json
+              when: "'vagrant' in homebrew_cask_apps"
+
             - name: Check if hostname is already Setup
               ignore_errors: true
               changed_when: false

@@ -35,5 +35,5 @@ deactivate
 ##### ansible commands
 ```bash
 ansible-galaxy install -r ./requirements/requirements.yml
-ansible-playbook setup.yml --ask-become-pass
+ansible-playbook local.yml --ask-become-pass
 ```
