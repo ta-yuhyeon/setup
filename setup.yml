@@ -4,15 +4,14 @@
   gather_facts: true
   vars_files:
     - vars.yml
-#  vars_prompt:
-#    - name: desired_hostname
-#      prompt: What is the hostname?
-#      private: false
-#
-#    - name: git_email
-#      prompt: What is your email?
-#      private: false
-  
+  vars_prompt:
+    - name: desired_hostname
+      prompt: What is the hostname?
+      private: false
+
+    - name: git_email
+      prompt: What is your email?
+      private: false
   tasks:
     - name: Setup for Linux Based Workstations with x86_64 processor
       when: ansible_system == "Linux" and ansible_architecture == "x86_64"
@@ -49,10 +48,10 @@
                 name: geerlingguy.mac.homebrew
                 tasks_from: main.yml
 
-            - name: Install mas and apps
-              ansible.builtin.import_role:
-                name: geerlingguy.mac.mas
-                tasks_from: main.yml
+#            - name: Install mas and apps
+#              ansible.builtin.import_role:
+#                name: geerlingguy.mac.mas
+#                tasks_from: main.yml
 
             - name: manage dock and apps
               ansible.builtin.import_role:

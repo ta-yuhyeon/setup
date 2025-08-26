@@ -11,7 +11,8 @@ homebrew_packages:
   - visual-studio-code
 
 mas_installed_apps:
-  - { id: 571213070, name: "DaVinci Resolve" }
+  - { id: "571213070", name: "DaVinci Resolve" }
+  - { id: 425264550, name: "Blackmagic Disk Speed Test (3.0)" }
 
 homebrew_installed_packages:
   - nmap
