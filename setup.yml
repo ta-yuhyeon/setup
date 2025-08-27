@@ -43,6 +43,12 @@
               become: false
               loop: "{{ dotfile_list }}"
 
+            - name: Render gitconfig file
+              ansible.builtin.template:
+                src: gitconfig.j2
+                dest: ~/.gitconfig
+                mode: '0644'
+
             - name: Install homebrew and apps
               ansible.builtin.import_role:
                 name: geerlingguy.mac.homebrew

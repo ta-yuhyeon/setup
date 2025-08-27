@@ -42,3 +42,6 @@ deactivate
 ansible-galaxy install -r ./requirements/requirements.yml
 ansible-playbook setup.yml --ask-become-pass
 ```
+
+##### Inspirations
+for this project i got inspired by the mac-dev-playbook from gerlingguy
