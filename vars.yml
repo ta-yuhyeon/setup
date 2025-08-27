@@ -31,7 +31,6 @@ homebrew_cask_apps:
   - google-chrome
   - discord
   - brave-browser
-#TODO: fix vmware-fusion installation  - vmware-fusion
   - raspberry-pi-imager
 
 configure_dock: false
@@ -65,9 +64,9 @@ dockitems_persist:
 #  - name: Vmware Fusion
 #    path: "/Applications/VMware Fusion.app/"
 #    pos: 7
-  - name: DaVinci Resolve
-    path: "/Applications/DaVinci Resolve.app/"
-    pos: 7
+#  - name: DaVinci Resolve
+#    path: "/Applications/DaVinci Resolve.app/"
+#    pos: 7
   - name: Obsidian
     path: "/Applications/Obsidian.app/"
     pos: 8
