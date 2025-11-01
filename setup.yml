@@ -60,6 +60,8 @@
 #                tasks_from: main.yml
 
             - name: manage dock and apps
+              tags:
+                - dock
               ansible.builtin.import_role:
                 name: geerlingguy.mac.dock
                 tasks_from: main.yml
