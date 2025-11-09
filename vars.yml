@@ -20,7 +20,6 @@ homebrew_installed_packages:
   - wget
   - tmux
   - podman
-  - packer
 
 homebrew_taps:
   - hashicorp/tap
